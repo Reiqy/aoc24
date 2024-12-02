@@ -7,7 +7,7 @@ public class Problem1
         var left = new List<int>();
         var right = new List<int>();
 
-        var lines = File.ReadAllLines("input/aoc24_1a.txt");
+        var lines = File.ReadAllLines("input/aoc24_1.txt");
         foreach (var line in lines)
         {
             var parts = line.Split(' ', StringSplitOptions.RemoveEmptyEntries);
