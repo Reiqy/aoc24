@@ -1,7 +1,5 @@
 ﻿namespace AoC24;
 
-using System.Runtime.CompilerServices;
-
 public class Problem2
 {
     public int SolveA()

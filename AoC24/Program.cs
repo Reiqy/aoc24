@@ -15,5 +15,9 @@ internal class Program
         var problem3 = new Problem3();
         Console.WriteLine($"Problem 3A: {problem3.SolveA()}");
         Console.WriteLine($"Problem 3B: {problem3.SolveB()}");
+
+        var problem4 = new Problem4();
+        Console.WriteLine($"Problem 4A: {problem4.SolveA()}");
+        Console.WriteLine($"Problem 4B: {problem4.SolveB()}");
     }
 }
