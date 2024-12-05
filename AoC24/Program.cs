@@ -1,9 +1,13 @@
 ﻿namespace AoC24;
 
+using System.Diagnostics;
+
 internal class Program
 {
     static void Main(string[] args)
     {
+        var startTimestamp = Stopwatch.GetTimestamp();
+
         var problem1 = new Problem1();
         Console.WriteLine($"Problem 1A: {problem1.SolveA()}");
         Console.WriteLine($"Problem 1B: {problem1.SolveB()}");
@@ -19,5 +23,12 @@ internal class Program
         var problem4 = new Problem4();
         Console.WriteLine($"Problem 4A: {problem4.SolveA()}");
         Console.WriteLine($"Problem 4B: {problem4.SolveB()}");
+
+        var problem5 = new Problem5();
+        Console.WriteLine($"Problem 5A: {problem5.SolveA()}");
+        Console.WriteLine($"Problem 5B: {problem5.SolveB()}");
+
+        var elapsed = Stopwatch.GetElapsedTime(startTimestamp);
+        Console.WriteLine($"Total elapsed time: {elapsed}");
     }
 }
