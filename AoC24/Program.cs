@@ -28,6 +28,10 @@ internal class Program
         Console.WriteLine($"Problem 5A: {problem5.SolveA()}");
         Console.WriteLine($"Problem 5B: {problem5.SolveB()}");
 
+        var problem6 = new Problem6();
+        Console.WriteLine($"Problem 6A: {problem6.SolveA()}");
+        // Console.WriteLine($"Problem 6B: {problem6.SolveB()}");
+
         var elapsed = Stopwatch.GetElapsedTime(startTimestamp);
         Console.WriteLine($"Total elapsed time: {elapsed}");
     }
