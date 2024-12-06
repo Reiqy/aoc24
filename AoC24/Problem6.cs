@@ -1,13 +1,21 @@
 ﻿namespace AoC24;
 
+using System;
+
 public class Problem6
 {
     public int SolveA()
     {
         var lines = File.ReadAllLines("input/aoc24_6.txt");
         var map = new Map(lines);
-        var guard = map.SpawnGuard();
+        var visitedTiles = this.GetVisitedTiles(map);
 
+        return visitedTiles.Count;
+    }
+
+    private HashSet<(int X, int Y)> GetVisitedTiles(Map map)
+    {
+        var guard = map.SpawnGuard();
         var visitedTiles = new HashSet<(int, int)>();
         while (guard.IsInBounds(map.Width, map.Height))
         {
@@ -29,7 +37,7 @@ public class Problem6
             guard.Move();
         }
 
-        return visitedTiles.Count;
+        return visitedTiles;
     }
 
     // The following brute-force solution is definitely not very optimal.
@@ -38,52 +46,54 @@ public class Problem6
         var lines = File.ReadAllLines("input/aoc24_6.txt");
         var map = new Map(lines);
 
+        var visitedTilesWithoutAddedObstacles = this.GetVisitedTiles(map);
+
         var possibleLoopsCount = 0;
-        for (int x = 0; x < map.Width; x++)
+        foreach (var visitedTile in visitedTilesWithoutAddedObstacles)
         {
-            for (int y = 0; y < map.Height; y++)
+            var x = visitedTile.X;
+            var y = visitedTile.Y;
+
+            bool isEligibleForLoopTest = map.GetTileObject(x, y) != TileObject.Obstacle;
+            if (!isEligibleForLoopTest)
             {
-                bool isEligibleForLoopTest = map.GetTileObject(x, y) != TileObject.Obstacle;
-                if (!isEligibleForLoopTest)
+                continue;
+            }
+
+            map.SpawnObstacle(x, y);
+
+            var guard = map.SpawnGuard();
+            var visitedTiles = new HashSet<(int x, int y, DirectionVector fromDirection)>();
+            while (guard.IsInBounds(map.Width, map.Height))
+            {
+                var currentX = guard.X;
+                var currentY = guard.Y;
+                var currentDirection = guard.Direction;
+
+                if (visitedTiles.Contains((currentX, currentY, currentDirection)))
                 {
-                    continue;
+                    possibleLoopsCount++;
+                    break;
                 }
 
-                map.SpawnObstacle(x, y);
-
-                var guard = map.SpawnGuard();
-                var visitedTiles = new HashSet<(int x, int y, DirectionVector fromDirection)>();
-                while (guard.IsInBounds(map.Width, map.Height))
+                visitedTiles.Add((guard.X, guard.Y, guard.Direction));
+                if (guard.IsPeekInBounds(map.Width, map.Height))
                 {
-                    var currentX = guard.X;
-                    var currentY = guard.Y;
-                    var currentDirection = guard.Direction;
-
-                    if (visitedTiles.Contains((currentX, currentY, currentDirection)))
+                    var (guardNextX, guardNextY) = guard.Peek();
+                    if (map.GetTileObject(guardNextX, guardNextY) != TileObject.Obstacle)
                     {
-                        possibleLoopsCount++;
-                        break;
-                    }
-
-                    visitedTiles.Add((guard.X, guard.Y, guard.Direction));
-                    if (guard.IsPeekInBounds(map.Width, map.Height))
-                    {
-                        var (guardNextX, guardNextY) = guard.Peek();
-                        if (map.GetTileObject(guardNextX, guardNextY) != TileObject.Obstacle)
-                        {
-                            guard.Move();
-                            continue;
-                        }
-
-                        guard.Rotate();
+                        guard.Move();
                         continue;
                     }
 
-                    guard.Move();
+                    guard.Rotate();
+                    continue;
                 }
 
-                map.DespawnObstacle(x, y);
+                guard.Move();
             }
+
+            map.DespawnObstacle(x, y);
         }
 
         return possibleLoopsCount;
