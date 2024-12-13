@@ -14,7 +14,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="input\aoc24_13t.txt" />
     <None Remove="input\aoc24_2.txt" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MathNet.Numerics" Version="5.0.0" />
   </ItemGroup>
 
 </Project>
