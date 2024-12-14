@@ -15,6 +15,7 @@
 
   <ItemGroup>
     <None Remove="input\aoc24_13t.txt" />
+    <None Remove="input\aoc24_14 - Copy.txt" />
     <None Remove="input\aoc24_2.txt" />
   </ItemGroup>
 
