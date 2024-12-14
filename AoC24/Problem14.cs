@@ -77,6 +77,8 @@ public class Problem14
         }
     }
 
+    private readonly record struct Vector2D(double X, double Y);
+
     private void VisualizeRobots(IEnumerable<Robot> robots, Vector2 size)
     {
         for (var y = 0; y < size.Y; y++)
@@ -93,40 +95,46 @@ public class Problem14
 
     public int SolveB()
     {
-        // I really don't like this puzzle.
-        // I don't know if there is any good solution.
-        // I definitely cheated to solve this and found the solution idea on Reddit. I wouldn't have thought of this myself.
+        //    // I really don't like this puzzle.
+        //    // I don't know if there is any good solution.
+        //    // I definitely cheated to solve this and found the solution idea on Reddit. I wouldn't have thought of this myself.
 
-        //var input = File.ReadAllLines("input/aoc24_14.txt");
-        //var robotRegex = new Regex(@"p=(?<px>\d+),(?<py>\d+)\s+v=(?<vx>-?\d+),(?<vy>-?\d+)");
-        //var robots = new List<Robot>();
-        //foreach (var line in input)
-        //{
-        //    var match = robotRegex.Match(line);
-        //    var position = new Vector2(int.Parse(match.Groups["px"].Value), int.Parse(match.Groups["py"].Value));
-        //    var velocity = new Vector2(int.Parse(match.Groups["vx"].Value), int.Parse(match.Groups["vy"].Value));
-        //    var robot = new Robot(position, velocity);
-        //    robots.Add(robot);
-        //}
+        //    // UPDATE after several minutes: I've reconsidered. It's not as bad as I thought but I still don't like it.
+        //    // My new idea is basically about minimizing the variance. I assume that robots actually try to form some sort of pattern in a noise.
+        //    // The main reason for disliking this puzzle is that it relies on assumption about the result.
 
-        //var lowestSafetyFactor = int.MaxValue;
-
-        //var size = new Vector2(101, 103);
-        //for (int step = 0; step < 100_000_000; step++)
-        //{
-        //    foreach (var robot in robots)
+        //    var input = File.ReadAllLines("input/aoc24_14.txt");
+        //    var robotRegex = new Regex(@"p=(?<px>\d+),(?<py>\d+)\s+v=(?<vx>-?\d+),(?<vy>-?\d+)");
+        //    var robots = new List<Robot>();
+        //    foreach (var line in input)
         //    {
-        //        robot.Step(size);
+        //        var match = robotRegex.Match(line);
+        //        var position = new Vector2(int.Parse(match.Groups["px"].Value), int.Parse(match.Groups["py"].Value));
+        //        var velocity = new Vector2(int.Parse(match.Groups["vx"].Value), int.Parse(match.Groups["vy"].Value));
+        //        var robot = new Robot(position, velocity);
+        //        robots.Add(robot);
         //    }
 
-        //    var safetyFactor = this.CalculateSafetyFactor(robots, size);
-        //    if (safetyFactor < lowestSafetyFactor)
+        //    var lowestVariance = double.MaxValue;
+
+        //    var size = new Vector2(101, 103);
+        //    for (int step = 0; step < 100_000_000; step++)
         //    {
-        //        Console.WriteLine($"New low for step {step}");
-        //        this.VisualizeRobots(robots, size);
-        //        lowestSafetyFactor = safetyFactor;
+        //        foreach (var robot in robots)
+        //        {
+        //            robot.Step(size);
+        //        }
+
+        //        var variance = this.ComputeVariance(robots.Select(x => x.Position));
+        //        var tVariance = variance.X * variance.Y;
+        //        if (tVariance < lowestVariance)
+        //        {
+        //            Console.WriteLine($"New low for step {step}");
+        //            Console.WriteLine($"{variance}");
+        //            this.VisualizeRobots(robots, size);
+        //            lowestVariance = tVariance;
+        //        }
         //    }
-        //}
 
         return 7687;
     }
@@ -178,5 +186,16 @@ public class Problem14
 
         var safetyFactor = topLeftCount * topRightCount * bottomLeftCount * bottomRightCount;
         return safetyFactor;
+    }
+
+    private Vector2D ComputeAverage(IEnumerable<Vector2> vectors)
+    {
+        return new Vector2D(vectors.Select(x => x.X).Average(), vectors.Select(x => x.Y).Average());
+    }
+
+    private Vector2D ComputeVariance(IEnumerable<Vector2> vectors)
+    {
+        var average = this.ComputeAverage(vectors);
+        return new Vector2D(vectors.Select(x => Math.Pow(x.X - average.X, 2)).Sum(), vectors.Select(x => Math.Pow(x.Y - average.Y, 2)).Sum());
     }
 }
